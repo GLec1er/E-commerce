@@ -1,0 +1,45 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Create Discount for {{ product.name }}</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Discount Name</label>
+            {{ form.name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_discount_type" class="form-label">Discount Type</label>
+            {{ form.discount_type }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_value" class="form-label">Discount Value</label>
+            {{ form.value }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_start_date" class="form-label">Start Date</label>
+            {{ form.start_date }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_end_date" class="form-label">End Date</label>
+            {{ form.end_date }}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Create Discount</button>
+    </form>
+
+    <a href="{% url 'user:product_detail' product.id %}" class="btn btn-secondary mt-3">Back to Product</a>
+</div>
+{% endblock %}

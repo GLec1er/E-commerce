@@ -1,0 +1,15 @@
+{% extends 'user/base.html' %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <div class="container d-flex justify-content-center align-items-center vh-100">
+        <div class="card shadow-lg" style="max-width: 400px; width: 100%;">
+            <div class="card-body text-center">
+                <h2>Добро пожаловать!</h2>
+                <p class="mb-4">Вы успешно вошли в систему.</p>
+                <a href="{% url 'user:logout' %}" class="btn btn-danger w-100">Выйти</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,35 @@
+<aside class="col-md-3">
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-primary text-white fw-bold">
+            Категории
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><a href="#" class="text-decoration-none">Все товары</a></li>
+                <li class="list-group-item"><a href="#" class="text-decoration-none">Электроника</a></li>
+                <li class="list-group-item"><a href="#" class="text-decoration-none">Одежда</a></li>
+                <li class="list-group-item"><a href="#" class="text-decoration-none">Бытовая техника</a></li>
+                <li class="list-group-item"><a href="#" class="text-decoration-none">Аксессуары</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-header bg-success text-white fw-bold">
+            Фильтр по цене
+        </div>
+        <div class="card-body">
+            <form method="get">
+                <div class="mb-3">
+                    <label for="minPrice" class="form-label">Минимальная цена</label>
+                    <input type="number" class="form-control" id="minPrice" name="min_price" placeholder="0">
+                </div>
+                <div class="mb-3">
+                    <label for="maxPrice" class="form-label">Максимальная цена</label>
+                    <input type="number" class="form-control" id="maxPrice" name="max_price" placeholder="10000">
+                </div>
+                <button type="submit" class="btn btn-primary w-100">Применить</button>
+            </form>
+        </div>
+    </div>
+</aside>

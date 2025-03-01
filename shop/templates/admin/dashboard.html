@@ -1,0 +1,94 @@
+{% extends 'admin/base_site.html' %}
+
+{% block title %}Custom Dashboard - Admin{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h1 class="dashboard-title">Welcome to the Custom Admin Dashboard</h1>
+
+    <div class="dashboard-overview">
+        <div class="overview-box">
+            <h3>Total Sales</h3>
+            <p class="overview-value">${{ total_sales }}</p>
+        </div>
+        <div class="overview-box">
+            <h3>Active Users</h3>
+            <p class="overview-value">{{ active_users }}</p>
+        </div>
+        <div class="overview-box">
+            <h3>Orders Pending</h3>
+            <p class="overview-value">{{ pending_orders }}</p>
+        </div>
+    </div>
+
+    <div class="dashboard-charts">
+        <div class="chart-container">
+            <h2>Sales Growth (Last 12 Months)</h2>
+            <canvas id="salesChart"></canvas>
+        </div>
+        <div class="chart-container">
+            <h2>Order Status Breakdown</h2>
+            <canvas id="orderStatusChart"></canvas>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    // Sales Growth Data
+    const salesData = {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+        datasets: [{
+            label: 'Sales Growth',
+            data: {{ sales_data|safe }},
+    borderColor: '#4e73df',
+        fill: false,
+        tension: 0.1
+    }]
+    };
+
+    // Order Status Data
+    const orderStatusData = {
+        labels: ['Completed', 'Pending', 'Shipped', 'Canceled', 'Paid'],
+        datasets: [{
+            label: 'Order Status',
+            data: {{ order_status|safe }},
+    backgroundColor: ['#28a745', '#ffc107', '#17a2b8', '#dc3545', '#6c757d'],
+        hoverOffset: 4
+    }]
+    };
+
+    // Create Sales Growth Chart
+    const salesChart = new Chart(document.getElementById('salesChart'), {
+        type: 'line',
+        data: salesData,
+        options: {
+            responsive: true,
+            scales: {
+                x: {
+                    beginAtZero: true
+                },
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+
+    // Create Order Status Breakdown Chart
+    const orderStatusChart = new Chart(document.getElementById('orderStatusChart'), {
+        type: 'pie',
+        data: orderStatusData,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+            }
+        }
+    });
+</script>
+{% endblock %}

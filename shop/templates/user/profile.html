@@ -1,0 +1,140 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+        <h1 class="mb-0">Profile</h1>
+        <div class="d-flex gap-3">
+            <a href="/shop/orders" class="btn btn-outline-primary btn-lg fw-bold ">
+                🛍 Check Your Orders
+            </a>
+            <a href="/shop/" class="btn btn-outline-secondary btn-lg fw-bold ">
+                &larr; Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+
+    <!-- Блок информации о пользователе -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">User Information</h5>
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            {% if user.phone %}
+            <p><strong>Phone:</strong> {{ user.phone }}</p>
+            {% endif %}
+            {% if user.photo %}
+            <img src="{{ user.photo.url }}" alt="User Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px;">
+            {% else %}
+            <img src="{% static 'images/default_user.jpg' %}" alt="Default User Photo" class="rounded-circle mb-3" style="width: 100px; height: 100px;">
+            {% endif %}
+            <p><strong>Role:</strong>
+                {% if user.is_sealer %}
+                <span class="badge bg-success">Seller</span>
+                {% else %}
+                <span class="badge bg-secondary">Buyer</span>
+                {% endif %}
+            </p>
+        </div>
+    </div>
+
+    {% if not user.is_sealer %}
+    <div class="card mb-4">
+        <div class="card-body text-center">
+            <h5 class="card-title">Want to become a seller?</h5>
+            <p class="card-text">Create your own shop and start selling your products today.</p>
+            <a href="{% url 'user:create_shop' %}" class="btn btn-success">Create Shop</a>
+        </div>
+    </div>
+    {% else %}
+
+    <!-- Блок информации о магазине -->
+    {% if user.is_sealer and profile.store_name %}
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Shop Information</h5>
+            <p><strong>Shop Name:</strong> {{ profile.store_name }}</p>
+            <p><strong>Active:</strong> {{ profile.store_name.is_active }}</p>
+            <p><strong>Description:</strong> {{ profile.description }}</p>
+            {% if profile.store_name.logo %}
+            <img src="{{ profile.store_name.logo.url }}" alt="Shop Photo" class="rounded mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+            {% else %}
+            <img src="{% static 'images/logo_store_1.png' %}" alt="Default Shop Photo" class="rounded mb-3" style="width: 150px; height: 150px; object-fit: cover;">
+            {% endif %}
+            <p><a href="{% url 'user:profile_edit' %}" class="btn btn-outline-primary">Edit Shop</a></p>
+            <form action="{% url 'user:delete_shop' %}" method="post" class="mt-3">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger" onclick="return confirm('Are you sure you want to delete your shop? This action cannot be undone!')">Delete Shop</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Блок со списком товаров магазина -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">Shop Products</h5>
+            {% if products.all %}
+            <div class="row">
+                {% for product in products.all %}
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        {% if product.photo %}
+                        <img src="{{ product.photo.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 150px; object-fit: cover;">
+                        {% else %}
+                        <img src="{% static 'images/default_product.png' %}" class="card-img-top" alt="Default Product Photo" style="height: 150px; object-fit: cover;">
+                        {% endif %}
+
+                        {% if not product.is_active %}
+                        <span class="badge bg-warning text-dark mt-3">Draft</span>
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate" title="{{ product.name }}">{{ product.name }}</h5>
+                            <p class="card-text">{{ product.description|truncatechars:50 }}</p>
+                            <p class="card-text">
+                                {% if product.discount %}
+                                <span class="text-decoration-line-through text-muted">{{ product.price }} ₽</span>
+                                <span class="text-success">{{ product.get_discounted_price }} ₽</span>
+
+                                <!-- Информация о скидке -->
+                            <p class="card-text mb-1">
+                                <strong>Discount:
+                                    {% if product.discount.discount_type == 'percentage' %}
+                                    -{{ product.discount.value|floatformat:0 }}%
+                                    {% else %}
+                                    -{{ product.discount.value }} ₽
+                                    {% endif %}
+                                </strong>
+                            </p>
+                            <p class="card-text">
+                                    <span class="badge bg-danger">
+                                        Active until: {{ product.discount.end_date|date:"d.m.Y" }}
+                                    </span>
+                            </p>
+                            {% else %}
+                            <span class="text-success">{{ product.price }} ₽</span>
+                            {% endif %}
+                            </p>
+
+                            <div class="d-flex gap-2">
+                                <a href="{% url 'user:product_detail' product.id %}" class="btn btn-outline-primary btn-sm flex-grow-1">View</a>
+                                <a href="{% url 'user:product_edit' product.id %}" class="btn btn-outline-secondary btn-sm flex-grow-1">Edit</a>
+                                <a href="{% url 'user:product_delete' product.id %}" class="btn btn-outline-danger btn-sm flex-grow-1">Delete</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>No products available.</p>
+            {% endif %}
+            <p><a href="{% url 'user:product_create' %}" class="btn btn-outline-success">Add New Product</a></p>
+        </div>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

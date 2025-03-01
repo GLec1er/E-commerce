@@ -1,0 +1,97 @@
+{% extends 'shop/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center mb-4 mt-3">
+        <h1 class="mb-0">🛋️ Your basket</h1>
+        <a href="{% url 'shop:dashboard' %}" class="btn btn-outline-primary">&larr; Back to Dashboard</a>
+    </div>
+
+    {% if basket_items %}
+    <table class="table table-bordered text-center align-middle">
+        <thead class="table-light">
+        <tr>
+            <th>Название</th>
+            <th>Цена</th>
+            <th>Количество</th>
+            <th>Сумма</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for item in basket.basketitem_set.all %}
+        <tr>
+            <td class="text-start">{{ item.product.name }}</td>
+            <td>
+                {% if item.product.discount %}
+                <span class="text-danger">{{ item.product.get_discounted_price|floatformat:2 }} ₽</span>
+                {% else %}
+                {{ item.product.price|floatformat:2 }} ₽
+                {% endif %}
+            </td>
+            <td>
+                <button class="btn btn-sm btn-outline-danger change-quantity" data-product-id="{{ item.product.id }}" data-action="decrease">➖</button>
+                <span class="mx-2 fw-bold">{{ item.quantity }}</span>
+                <button class="btn btn-sm btn-outline-success change-quantity" data-product-id="{{ item.product.id }}" data-action="increase">➕</button>
+            </td>
+            <td class="fw-bold">{{ item.get_total_price|floatformat:2 }} ₽</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="text-end">
+        <h4 class="fw-bold">Общая сумма: <span id="totalPrice">{{ total_price }} ₽</span></h4>
+        <button id="checkoutBtn" class="btn btn-outline-success">💼 Оформить заказ</button>
+    </div>
+    {% else %}
+    <div class="alert alert-info text-center">
+        <h4>🚫 Your basket is empty</h4>
+        <p>Add a product in basket, then make a order.</p>
+    </div>
+    {% endif %}
+</div>
+
+<script>
+    document.querySelectorAll(".change-quantity").forEach(button => {
+        button.addEventListener("click", function () {
+            const productId = this.getAttribute("data-product-id");
+            const action = this.getAttribute("data-action");
+            fetch(`/shop/basket/${productId}/`, {
+                method: action === "increase" ? "POST" : "DELETE",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            }).then(response => response.json())
+                .then(data => location.reload());
+        });
+    });
+
+    document.querySelectorAll(".remove-item").forEach(button => {
+        button.addEventListener("click", function () {
+            const productId = this.getAttribute("data-product-id");
+            fetch(`/shop/basket/${productId}/`, {
+                method: "DELETE",
+                headers: {
+                    "X-CSRFToken": "{{ csrf_token }}",
+                    "Content-Type": "application/json"
+                }
+            }).then(response => response.json())
+                .then(data => location.reload());
+        });
+    });
+
+    document.getElementById("checkoutBtn").addEventListener("click", function () {
+        fetch("{% url 'shop:create_order' %}", {
+            method: "POST",
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}"
+            }
+        }).then(response => {
+            if (response.ok) {
+                window.location.href = "{% url 'shop:orders' %}";
+            }
+        });
+    });
+</script>
+{% endblock %}

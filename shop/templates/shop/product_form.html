@@ -1,0 +1,87 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">{% if object %}Edit Product{% else %}Add Product{% endif %}</h1>
+
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>There were some errors with your submission:</strong>
+        <ul>
+            {% for field, errors in form.errors.items %}
+            {% for error in errors %}
+            <li>{{ field|title }}: {{ error }}</li>
+            {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data" class="card p-4 shadow">
+        {% csrf_token %}
+
+        <div class="mb-3">
+            <label for="id_name" class="form-label">Product Name</label>
+            {{ form.name }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            {{ form.description }}
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" id="{{ form.is_active.id_for_label }}" name="{{ form.is_active.name }}" value="True" {% if form.is_active.value %}checked{% endif %}>
+            <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+                Active
+            </label>
+        </div>
+
+        <div class="mb-3">
+            <label for="id_price" class="form-label">Price</label>
+            {{ form.price }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_photo" class="form-label">Photo</label>
+            {{ form.photo }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_category" class="form-label">Category</label>
+            {{ form.category }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_brand" class="form-label">Brand</label>
+            {{ form.brand }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_quantity_in_stock" class="form-label">Quantity in Stock</label>
+            {{ form.quantity_in_stock }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_color" class="form-label">Color</label>
+            {{ form.color }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_material" class="form-label">Material</label>
+            {{ form.material }}
+        </div>
+
+        <div class="mb-3">
+            <label for="id_discount" class="form-label">Discount</label>
+            {{ form.discount }}
+        </div>
+
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'user:profile' %}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

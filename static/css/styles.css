@@ -1,0 +1,7 @@
+.description-box {
+    max-height: 10em; /* Ограничение высоты (примерно 10 строк) */
+    overflow-y: auto; /* Включает вертикальную прокрутку */
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: pre-line; /* Сохраняет переносы строк */
+}

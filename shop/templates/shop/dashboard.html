@@ -1,0 +1,140 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+
+{% block content %}
+<h1 class="mb-4">Catalog</h1>
+<div class="row">
+    {% for product in products %}
+    <div class="col-md-4 mb-4">
+        <div class="card h-100 shadow-sm position-relative">
+            <!-- Изображение скидки в углу карточки -->
+            {% if product.discount and product.discount.is_active %}
+            <div class="position-absolute top-0 end-0" style="z-index: 10;">
+                <img src="{% static 'images/discount.png' %}" alt="Discount" style="width: 70px; height: 70px;">
+            </div>
+            {% endif %}
+
+            {% if product.photo %}
+            <img src="{{ product.photo.url }}" class="card-img-top" alt="{{ product.name }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <img src="{% static 'images/default_product.png' %}" class="card-img-top" alt="Default Product Photo" style="height: 200px; object-fit: cover;">
+            {% endif %}
+
+            <div class="card-body d-flex flex-column justify-content-between">
+                <h5 class="card-title text-primary text-truncate" style="font-weight: bold;" title="{{ product.name }}">{{ product.name }}</h5>
+                <p class="card-text text-muted" style="font-size: 0.9rem; min-height: 60px;">
+                    {{ product.description|truncatechars:100 }}
+                </p>
+
+                <!-- Блок с отображением цены и скидки -->
+                {% if product.discount and product.discount.is_active %}
+                <p class="card-text mb-1">
+                    <strong>Old Price:
+                        <span class="text-muted text-decoration-line-through">{{ product.price }} ₽</span>
+                    </strong>
+                </p>
+                <p class="card-text mb-1">
+                    <strong>Discounted Price:
+                        <span class="text-success">{{ product.get_discounted_price }} ₽</span>
+                    </strong>
+                </p>
+                <p class="card-text">
+                        <span class="badge bg-danger">
+                            {% if product.discount.discount_type == 'percentage' %}
+                                -{{ product.discount.value|floatformat:0 }}%
+                            {% else %}
+                                -{{ product.discount.value }} ₽
+                            {% endif %}
+                        </span>
+                    <span class="text-muted" style="font-size: 0.9rem;">
+                            Valid until {{ product.discount.end_date|date:"d.m.Y" }}
+                        </span>
+                </p>
+                {% else %}
+                <p class="card-text"><strong>Цена: <span class="text-success">{{ product.price }} ₽</span></strong></p>
+                {% endif %}
+
+                <p class="card-text mb-3"><strong>Магазин: <span class="text-secondary">{{ product.owner }}</span></strong></p>
+
+                <div class="d-flex flex-column gap-2">
+                    <!-- Кнопка View, которая занимает всю ширину -->
+                    <a href="{% url 'shop:product_detail_user' product.id %}"
+                       class="btn btn-outline-primary py-2 fw-bold w-100">
+                        View
+                    </a>
+
+                    {% if user.is_authenticated %}
+                    <!-- Контейнер для кнопок Add и Remove, которые будут в одну строку и занимать всю ширину -->
+                    <div class="d-flex gap-2 w-100">
+                        <span id="basketCount-{{ product.id }}" class="btn btn-outline-secondary py-3 px-4 fw-bold w-30">0</span>
+                        <button id="addToBasketBtn-{{ product.id }}" class="btn btn-outline-success py-2 px-4 fw-bold w-100" data-product-id="{{ product.id }}">
+                            Add 🛒
+                        </button>
+                        <button id="removeFromBasketBtn-{{ product.id }}" class="btn btn-outline-danger py-2 px-4 fw-bold w-100" data-product-id="{{ product.id }}">
+                            Remove ❌
+                        </button>
+                    </div>
+                    {% endif %}
+                </div>
+
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>Нет доступных товаров.</p>
+    {% endfor %}
+</div>
+
+<script>
+    // Функция для обновления количества товара в корзине
+    function updateBasketCount(productId, count) {
+        document.getElementById(`basketCount-${productId}`).textContent = count;
+    }
+
+    // Функция для обработки добавления и удаления товара из корзины
+    function handleBasketAction(url, method, productId) {
+        fetch(url, {
+            method: method,
+            headers: {
+                "X-CSRFToken": "{{ csrf_token }}",
+                "Content-Type": "application/json"
+            }
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.quantity !== undefined) {
+                    updateBasketCount(productId, data.quantity);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    // Функция для получения текущего количества товара в корзине
+    function fetchBasketCount(productId) {
+        fetch(`/shop/basket/${productId}/`, { method: "GET" })
+            .then(response => response.json())
+            .then(data => {
+                if (data.quantity !== undefined) {
+                    updateBasketCount(productId, data.quantity);
+                }
+            })
+            .catch(error => console.error("Error:", error));
+    }
+
+    // Слушаем события на кнопках для добавления и удаления товара из корзины
+    {% for product in products %}
+    document.getElementById(`addToBasketBtn-{{ product.id }}`).addEventListener("click", function () {
+        const productId = this.getAttribute("data-product-id");
+        handleBasketAction(`/shop/basket/${productId}/`, "POST", productId);
+    });
+
+    document.getElementById(`removeFromBasketBtn-{{ product.id }}`).addEventListener("click", function () {
+        const productId = this.getAttribute("data-product-id");
+        handleBasketAction(`/shop/basket/${productId}/`, "DELETE", productId);
+    });
+
+    // Получаем количество товара в корзине при загрузке страницы
+    fetchBasketCount({{ product.id }});
+    {% endfor %}
+</script>
+{% endblock %}
