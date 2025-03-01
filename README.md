@@ -1,101 +1,101 @@
-# Проект интернет-магазина
+# Online Store Project
 
-Этот проект представляет собой интернет-магазин, разработанный с использованием Django. Ниже приведено описание основных моделей и функциональности.
+This project represents an online store developed using Django. Below is a description of the main models and functionality.
 
-## Модели
+## Models
 
-### Пользователи (`shop.user`)
-- **Поля:**
-    - `username`: Имя пользователя.
-    - `password`: Пароль пользователя.
-    - `email`: Электронная почта пользователя.
-    - `is_sealer`: Флаг, указывающий, является ли пользователь продавцом.
-    - `phone`: Номер телефона пользователя.
-    - `photo`: Фотография пользователя.
-    - `is_active`: Флаг активности пользователя.
-    - `date_joined`: Дата регистрации пользователя.
+### Users (`shop.user`)
+- **Fields:**
+  - `username`: User's username.
+  - `password`: User's password.
+  - `email`: User's email.
+  - `is_sealer`: Flag indicating whether the user is a seller.
+  - `phone`: User's phone number.
+  - `photo`: User's photo.
+  - `is_active`: User's active status flag.
+  - `date_joined`: User's registration date.
 
-### Магазины (`shop.storename`)
-- **Поля:**
-    - `name`: Название магазина.
-    - `is_active`: Флаг активности магазина.
-    - `logo`: Логотип магазина.
+### Stores (`shop.storename`)
+- **Fields:**
+  - `name`: Store name.
+  - `is_active`: Store's active status flag.
+  - `logo`: Store's logo.
 
-### Профили продавцов (`shop.sellerprofile`)
-- **Поля:**
-    - `user`: Ссылка на пользователя (продавца).
-    - `store_name`: Ссылка на магазин.
-    - `description`: Описание магазина.
-    - `rating`: Рейтинг магазина.
-    - `created_at`: Дата создания профиля.
-    - `updated_at`: Дата последнего обновления профиля.
+### Seller Profiles (`shop.sellerprofile`)
+- **Fields:**
+  - `user`: Reference to the user (seller).
+  - `store_name`: Reference to the store.
+  - `description`: Store description.
+  - `rating`: Store rating.
+  - `created_at`: Profile creation date.
+  - `updated_at`: Profile last update date.
 
-### Товары (`shop.product`)
-- **Поля:**
-    - `name`: Название товара.
-    - `description`: Описание товара.
-    - `price`: Цена товара.
-    - `owner`: Владелец товара (продавец).
-    - `photo`: Фотография товара.
-    - `created_at`: Дата создания товара.
-    - `updated_at`: Дата последнего обновления товара.
-    - `category`: Категория товара.
-    - `brand`: Бренд товара.
-    - `quantity_in_stock`: Количество товара на складе.
-    - `is_active`: Флаг активности товара.
-    - `color`: Цвет товара.
-    - `material`: Материал товара.
-    - `rating`: Рейтинг товара.
-    - `discount`: Скидка на товар.
+### Products (`shop.product`)
+- **Fields:**
+  - `name`: Product name.
+  - `description`: Product description.
+  - `price`: Product price.
+  - `owner`: Product owner (seller).
+  - `photo`: Product photo.
+  - `created_at`: Product creation date.
+  - `updated_at`: Product last update date.
+  - `category`: Product category.
+  - `brand`: Product brand.
+  - `quantity_in_stock`: Product stock quantity.
+  - `is_active`: Product's active status flag.
+  - `color`: Product color.
+  - `material`: Product material.
+  - `rating`: Product rating.
+  - `discount`: Product discount.
 
-### Скидки (`shop.discount`)
-- **Поля:**
-    - `name`: Название скидки.
-    - `description`: Описание скидки.
-    - `discount_type`: Тип скидки (процентная или фиксированная).
-    - `value`: Значение скидки.
-    - `start_date`: Дата начала действия скидки.
-    - `end_date`: Дата окончания действия скидки.
-    - `category`: Категория товара, на которую распространяется скидка.
-    - `product`: Товар, на который распространяется скидка.
+### Discounts (`shop.discount`)
+- **Fields:**
+  - `name`: Discount name.
+  - `description`: Discount description.
+  - `discount_type`: Discount type (percentage or fixed).
+  - `value`: Discount value.
+  - `start_date`: Discount start date.
+  - `end_date`: Discount end date.
+  - `category`: Product category the discount applies to.
+  - `product`: Product the discount applies to.
 
-### Заказы (`shop.order`)
-- **Поля:**
-    - `user`: Пользователь, оформивший заказ.
-    - `status`: Статус заказа (например, "pending", "paid", "completed").
-    - `delivery_date`: Дата доставки заказа.
-    - `created_at`: Дата создания заказа.
-    - `updated_at`: Дата последнего обновления заказа.
+### Orders (`shop.order`)
+- **Fields:**
+  - `user`: User who placed the order.
+  - `status`: Order status (e.g., "pending", "paid", "completed").
+  - `delivery_date`: Order delivery date.
+  - `created_at`: Order creation date.
+  - `updated_at`: Order last update date.
 
-### Элементы заказа (`shop.orderitem`)
-- **Поля:**
-    - `order`: Заказ, к которому относится элемент.
-    - `product`: Товар в заказе.
-    - `quantity`: Количество товара в заказе.
+### Order Items (`shop.orderitem`)
+- **Fields:**
+  - `order`: Order the item belongs to.
+  - `product`: Product in the order.
+  - `quantity`: Product quantity in the order.
 
-### Корзины (`shop.basket`)
-- **Поля:**
-    - `user`: Пользователь, к которому относится корзина.
+### Baskets (`shop.basket`)
+- **Fields:**
+  - `user`: User the basket belongs to.
 
 
-## Установка и запуск
+## Installation and Setup
 0. Развернуть виртуальное окружение:
    ```bash
     python -m venv venv
 
-1. Установите зависимости:
+1. Install dependencies:
    ```bash
     pip install -r req.txt
 
-2. Развернуть базу в докере
+2. Set up the database in Docker:
    ```bash
    docker compose up -d
 
-3. Накатить дамп
+3. Load the database dump:
    ```bash
    python manage.py loaddata db_dump.json
 
 
-4. Запустить проект
+4. Run the project:
    ```bash
    python manage.py runserver
