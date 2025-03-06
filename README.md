@@ -1,6 +1,51 @@
 # Online Store Project
 
-This project represents an online store developed using Django. Below is a description of the main models and functionality.
+![Описание изображения](static/images/logo.jpg)
+
+
+## E-commerce Platform Functionality Overview
+Our platform allows users to register, browse products, and make purchases. Additionally, users can become sellers, create their own stores, and offer discounts on their products. The main features include:
+
+### General User Features:
+- Users can browse product listings but cannot add other users' products to their carts.
+- The cart exists as a single instance per user and can only be recreated after completing an order.
+- A dedicated cart page is available for users to view their selected products.
+- Users can sort the product list for better navigation (upcoming feature).
+
+### Seller Features:
+- Users can convert their account into a seller account.
+- Sellers can create their own store (limited to one store per user).
+- Stores display the seller’s products, allowing customers to browse and purchase.
+- Sellers can add new products to their store.
+- Discounts can be applied to products, and these discounts will be visible in the user profile.
+
+### Product & Store Management:
+- Users can add and remove products from their cart (upcoming feature).
+- Discounts created by sellers currently do not attach to products (to be fixed).
+- Store pages will showcase the seller’s store and its products instead of listing all products separately.
+- This functionality ensures a seamless shopping and selling experience while maintaining structured store management for sellers.
+
+## Installation and Setup
+0. Deploy virtual environment:
+   ```bash
+    python -m venv venv
+
+1. Install dependencies:
+   ```bash
+    pip install -r req.txt
+
+2. Set up the database in Docker:
+   ```bash
+   docker compose up -d
+
+3. Load the database dump:
+   ```bash
+   python manage.py loaddata db_dump.json
+
+
+4. Run the project:
+   ```bash
+   python manage.py runserver
 
 ## Models
 
@@ -78,24 +123,11 @@ This project represents an online store developed using Django. Below is a descr
   - `user`: User the basket belongs to.
 
 
-## Installation and Setup
-0. Развернуть виртуальное окружение:
-   ```bash
-    python -m venv venv
+## Main menu view
+![Описание изображения](static/images/shop.png)
 
-1. Install dependencies:
-   ```bash
-    pip install -r req.txt
+## Basker
+![Описание изображения](static/images/basket.png)
 
-2. Set up the database in Docker:
-   ```bash
-   docker compose up -d
-
-3. Load the database dump:
-   ```bash
-   python manage.py loaddata db_dump.json
-
-
-4. Run the project:
-   ```bash
-   python manage.py runserver
+## Order List
+![Описание изображения](static/images/order.png)
