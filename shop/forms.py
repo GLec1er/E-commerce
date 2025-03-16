@@ -9,19 +9,23 @@ from shop.models.product import Discount
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(
         required=True,
-        widget=forms.EmailInput(attrs={
-            "class": "form-control",
-            "placeholder": "Enter your email address",
-            "title": "Enter a valid phone number (e.g., +1234567890)"
-        }),
+        widget=forms.EmailInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter your email address",
+                "title": "Enter a valid phone number (e.g., +1234567890)",
+            }
+        ),
     )
     phone = forms.CharField(
         required=False,
-        widget=forms.TextInput(attrs={
-            "class": "form-control",
-            "placeholder": "Enter your phone number",
-            "title": "Enter a valid phone number (e.g., +1234567890)"
-        })
+        widget=forms.TextInput(
+            attrs={
+                "class": "form-control",
+                "placeholder": "Enter your phone number",
+                "title": "Enter a valid phone number (e.g., +1234567890)",
+            }
+        ),
     )
 
     class Meta:
@@ -36,37 +40,26 @@ class CustomUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields['username'].widget.attrs.update({
-            "class": "form-control",
-            "placeholder": "Choose a username",
-            "title": "Enter a unique username"
-        })
-        self.fields['password1'].widget.attrs.update({
-            "class": "form-control",
-            "placeholder": "Enter your password",
-            "title": "Enter a secure password with at least 8 characters"
-        })
-        self.fields['password2'].widget.attrs.update({
-            "class": "form-control",
-            "placeholder": "Confirm your password",
-            "title": "Passwords must match"
-        })
+        self.fields['username'].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Choose a username", "title": "Enter a unique username"}
+        )
+        self.fields['password1'].widget.attrs.update(
+            {
+                "class": "form-control",
+                "placeholder": "Enter your password",
+                "title": "Enter a secure password with at least 8 characters",
+            }
+        )
+        self.fields['password2'].widget.attrs.update(
+            {"class": "form-control", "placeholder": "Confirm your password", "title": "Passwords must match"}
+        )
 
 
 class LoginForm(forms.Form):
     username = forms.CharField(
-        max_length=100,
-        widget=forms.TextInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Username'
-        })
+        max_length=100, widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Username'})
     )
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
-            'class': 'form-control',
-            'placeholder': 'Password'
-        })
-    )
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'class': 'form-control', 'placeholder': 'Password'}))
 
 
 class SellerProfileForm(forms.ModelForm):

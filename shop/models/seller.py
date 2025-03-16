@@ -6,12 +6,7 @@ from shop.models import User
 class StoreName(models.Model):
     name = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
-    logo = models.ImageField(
-        upload_to='store_logos/',
-        null=True,
-        blank=True,
-        help_text="Upload a store logos."
-    )
+    logo = models.ImageField(upload_to='store_logos/', null=True, blank=True, help_text="Upload a store logos.")
 
     class Meta:
         verbose_name = "Store Name"
@@ -23,17 +18,9 @@ class StoreName(models.Model):
 
 
 class SellerProfile(models.Model):
-    user = models.OneToOneField(
-        User,
-        on_delete=models.CASCADE,
-        related_name="seller_profile"
-    )
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="seller_profile")
     store_name = models.OneToOneField(
-        StoreName,
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        related_name="seller_profile"
+        StoreName, on_delete=models.SET_NULL, null=True, blank=True, related_name="seller_profile"
     )
     description = models.TextField(blank=True, null=True)
     rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)

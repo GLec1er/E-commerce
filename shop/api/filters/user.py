@@ -66,11 +66,7 @@ class UserListFilter(FilterSet):
         }
 
     order_by_field = 'ordering'
-    ordering = OrderingFilter(
-        fields=(
-            ('username', 'username'),
-        )
-    )
+    ordering = OrderingFilter(fields=(('username', 'username'),))
 
     @staticmethod
     def filter_is_sealer(queryset: QuerySet[User], name: str, value: str) -> QuerySet[User]:

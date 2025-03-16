@@ -7,6 +7,7 @@ from shop.models import Order, OrderItem
 
 class OrderAPIView(generics.ListAPIView):
     """Получение всех заказов пользователя."""
+
     permission_classes = [IsAuthenticated]
     serializer_class = OrderSerializer
 
@@ -16,6 +17,7 @@ class OrderAPIView(generics.ListAPIView):
 
 class OrderProductAPIView(generics.ListAPIView):
     """Получение списка продуктов из конкретного заказа."""
+
     permission_classes = [IsAuthenticated]
     serializer_class = OrderItemSerializer
 

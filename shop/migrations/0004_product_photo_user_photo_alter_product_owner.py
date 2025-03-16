@@ -34,8 +34,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name="product",
             name="owner",
-            field=models.ForeignKey(
-                on_delete=django.db.models.deletion.CASCADE, to="shop.sellerprofile"
-            ),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="shop.sellerprofile"),
         ),
     ]

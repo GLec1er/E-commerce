@@ -43,7 +43,6 @@ API_URL_PATTERNS = [
     path('product/', include((PRODUCT_URL_PATTERNS, ShopConfig.name), namespace='product')),
     path('basket/', include((BASKET_URL_PATTERNS, ShopConfig.name), namespace='basket')),
     path('order/', include((ORDER_URL_PATTERNS, ShopConfig.name), namespace='order')),
-
     path('auth/login/', LoginView.as_view(), name='login'),
     path('auth/logout/', LogoutView.as_view(), name='logout'),
     path('auth/refresh/', RefreshTokenView.as_view(), name='token_refresh'),

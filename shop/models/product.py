@@ -74,12 +74,7 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     owner = models.ForeignKey(SellerProfile, on_delete=models.CASCADE)
-    photo = models.ImageField(
-        upload_to='product_photos/',
-        null=True,
-        blank=True,
-        help_text="Upload a product photo."
-    )
+    photo = models.ImageField(upload_to='product_photos/', null=True, blank=True, help_text="Upload a product photo.")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

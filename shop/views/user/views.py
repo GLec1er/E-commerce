@@ -58,11 +58,7 @@ def login_view(request):
     else:
         form = LoginForm()
 
-    return render(
-        request,
-        'user/login.html',
-        {'form': form}
-    )
+    return render(request, 'user/login.html', {'form': form})
 
 
 def logout_view(request):
@@ -97,10 +93,7 @@ class ProductUserDetailView(DetailView):
     context_object_name = 'product'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(
-            Product,
-            id=self.kwargs['product_id']
-        )
+        return get_object_or_404(Product, id=self.kwargs['product_id'])
 
 
 # Create a shop

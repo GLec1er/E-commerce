@@ -16,9 +16,10 @@ class ProductAPIView(
     mixins.DestroyModelMixin,
     mixins.RetrieveModelMixin,
     mixins.UpdateModelMixin,
-    PermissionsByActionMixin
+    PermissionsByActionMixin,
 ):
     """API для работы с продуктами"""
+
     queryset = Product.objects.select_related('category', 'brand', 'discount', 'owner').all()
     serializer_class = ProductSerializer
 
@@ -46,6 +47,7 @@ class ProductAPIView(
 
 class ProductListView(ListAPIView):
     """API для получения списка всех продуктов."""
+
     queryset = Product.objects.select_related(
         'category',
         'brand',

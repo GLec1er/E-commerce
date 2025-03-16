@@ -9,6 +9,7 @@ from shop.api.serializers.basket import BasketItemSerializer
 
 class BasketListView(generics.ListAPIView):
     """Получение всех товаров в корзине текущего пользователя."""
+
     serializer_class = BasketItemSerializer
     permission_classes = [IsAuthenticated]
 
@@ -25,6 +26,7 @@ class BasketAPIView(
     mixins.UpdateModelMixin,
 ):
     """Добавление, обновление и удаление товаров из корзины."""
+
     permission_classes = [IsAuthenticated]
     serializer_class = BasketItemSerializer
     queryset = BasketItem.objects.select_related("basket", "product").all()

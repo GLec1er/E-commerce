@@ -3,6 +3,7 @@ from rest_framework.permissions import BasePermission
 
 class RaisePermission(BasePermission):
     """Базовое право."""
+
     def has_permission(self, request, view):
         """Если не был описан метод."""
         return False

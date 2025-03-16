@@ -13,7 +13,9 @@ from shop.views.user.views import (
     login_view,
     logout_view,
     home,
-    ProductUserDetailView, ShopCreateView, DiscountCreateView,
+    ProductUserDetailView,
+    ShopCreateView,
+    DiscountCreateView,
 )
 
 USER_URL_PATTERNS = [

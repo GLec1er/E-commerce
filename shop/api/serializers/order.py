@@ -24,9 +24,7 @@ class OrderSerializer(BaseOrderSerializer):
     products = ProductSerializer(many=True)
 
     class Meta(BaseOrderSerializer.Meta):
-        fields = BaseOrderSerializer.Meta.fields + [
-            "products"
-        ]
+        fields = BaseOrderSerializer.Meta.fields + ["products"]
 
 
 class OrderItemSerializer(serializers.ModelSerializer):

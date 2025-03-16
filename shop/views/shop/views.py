@@ -31,10 +31,7 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
     def get_object(self, queryset=None):
-        return get_object_or_404(
-            Product,
-            id=self.kwargs['product_id']
-        )
+        return get_object_or_404(Product, id=self.kwargs['product_id'])
 
 
 class SellerProfileView(DetailView):
@@ -122,7 +119,7 @@ def basket_view(request):
             'basket': basket,
             'basket_items': basket_items,
             'total_price': total_price,
-        }
+        },
     )
 
 
@@ -216,10 +213,7 @@ def pay_order(request, order_id):
     if order.status == "pending":
         order.status = "paid"
         order.set_delivery_date()
-        return JsonResponse({
-            "status": "paid",
-            "delivery_date": order.delivery_date.strftime("%d.%m.%Y %H:%M")
-        })
+        return JsonResponse({"status": "paid", "delivery_date": order.delivery_date.strftime("%d.%m.%Y %H:%M")})
 
     return JsonResponse({"error": "Order cannot be paid"}, status=400)
 

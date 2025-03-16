@@ -37,9 +37,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "value",
-                    models.DecimalField(
-                        decimal_places=2, help_text="The discount value", max_digits=5
-                    ),
+                    models.DecimalField(decimal_places=2, help_text="The discount value", max_digits=5),
                 ),
                 ("start_date", models.DateField()),
                 ("end_date", models.DateField()),

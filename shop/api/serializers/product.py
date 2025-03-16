@@ -33,13 +33,7 @@ class OwnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SellerProfile
-        fields = [
-            'store_name',
-            'description',
-            'rating',
-            'created_at',
-            'updated_at'
-        ]
+        fields = ['store_name', 'description', 'rating', 'created_at', 'updated_at']
 
 
 class ProductSerializer(serializers.ModelSerializer):
