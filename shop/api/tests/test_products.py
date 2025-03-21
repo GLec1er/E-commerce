@@ -15,13 +15,14 @@ class ProductAPITestCase(BaseAPITestCase):
     - обновление продукта
     - удаление продукта
     """
+
     def setUp(self):
         super().setUp()
         self.product_data = {
             'name': 'Test Product',
             'description': 'Test Description',
             'price': '100.00',
-            'owner': self.seller.id
+            'owner': self.seller.id,
         }
 
     def test_create_product_as_seller(self):

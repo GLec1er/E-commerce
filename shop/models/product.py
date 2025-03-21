@@ -73,6 +73,7 @@ class Discount(models.Model):
 # Товар
 class Product(models.Model):
     """Модель товара в магазине с основными характеристиками и ценообразованием."""
+
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)

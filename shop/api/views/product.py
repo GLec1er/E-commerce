@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from shop.api.permissions.base import PermissionsByActionMixin
 from shop.api.permissions.user import IsAdminOrOwner
 from shop.api.serializers.product import ProductSerializer
-from shop.models import Product, SellerProfile
+from shop.models import Product
 
 
 class ProductAPIView(

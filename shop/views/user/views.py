@@ -14,6 +14,7 @@ from shop.models.product import Discount
 
 logger = logging.getLogger('shop')
 
+
 # Регистрация
 class RegisterView(CreateView):
     form_class = CustomUserCreationForm

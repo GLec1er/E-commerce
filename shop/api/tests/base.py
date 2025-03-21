@@ -1,4 +1,3 @@
-from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
 from django.urls import reverse
 from shop.models.seller import SellerProfile, StoreName
@@ -20,11 +19,7 @@ class BaseAPITestCase(APITestCase):
             user=self.user,
             store_name=StoreName.objects.create(name='Test Store'),
         )
-        self.admin = User.objects.create_superuser(
-            username='admin',
-            email='admin@example.com',
-            password='adminpass123'
-        )
+        self.admin = User.objects.create_superuser(username='admin', email='admin@example.com', password='adminpass123')
 
         # Проверка, что пользователи созданы
         self.assertTrue(User.objects.filter(username='testuser').exists())
@@ -33,10 +28,7 @@ class BaseAPITestCase(APITestCase):
     def get_access_token(self, username='testuser', password='testpass123'):
         """Получение токена авторизации."""
         url = reverse('api:login')
-        response = self.client.post(url, {
-            'username': username,
-            'password': password
-        })
+        response = self.client.post(url, {'username': username, 'password': password})
         return response.cookies.get('access_token')
 
     def authenticate_user(self, user=None):
@@ -51,12 +43,7 @@ class BaseAPITestCase(APITestCase):
         if seller is None:
             seller = self.seller
         url = reverse('shop:product-list')
-        data = {
-            'name': 'Test Product',
-            'description': 'Test Description',
-            'price': '100.00',
-            'owner': seller.id
-        }
+        data = {'name': 'Test Product', 'description': 'Test Description', 'price': '100.00', 'owner': seller.id}
         response = self.client.post(url, data)
 
         # Проверка, что продукт создан

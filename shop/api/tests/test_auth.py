@@ -18,10 +18,7 @@ class AuthAPITestCase(BaseAPITestCase):
     def test_login_success(self):
         """Тест успешной аутентификации пользователя."""
         url = reverse('api:login')
-        response = self.client.post(url, {
-            'username': 'testuser',
-            'password': 'testpass123'
-        })
+        response = self.client.post(url, {'username': 'testuser', 'password': 'testpass123'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('access_token', response.cookies)
         self.assertIn('refresh_token', response.cookies)
@@ -29,10 +26,7 @@ class AuthAPITestCase(BaseAPITestCase):
     def test_login_invalid_credentials(self):
         """Тест неуспешной аутентификации с неверными учетными данными."""
         url = reverse('api:login')
-        response = self.client.post(url, {
-            'username': 'testuser',
-            'password': 'wrongpass'
-        })
+        response = self.client.post(url, {'username': 'testuser', 'password': 'wrongpass'})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_logout_success(self):
@@ -53,10 +47,7 @@ class AuthAPITestCase(BaseAPITestCase):
         """Тест обновления токена."""
         # 1. Получаем refresh token
         login_url = reverse('api:login')
-        login_response = self.client.post(login_url, {
-            'username': 'testuser',
-            'password': 'testpass123'
-        })
+        login_response = self.client.post(login_url, {'username': 'testuser', 'password': 'testpass123'})
 
         # Проверяем, что логин успешен и есть куки с токенами
         self.assertEqual(login_response.status_code, status.HTTP_200_OK)
@@ -76,7 +67,5 @@ class AuthAPITestCase(BaseAPITestCase):
     def test_refresh_token_invalid(self):
         """Тест обновления токена с недействительным refresh_token."""
         url = reverse('api:token_refresh')
-        response = self.client.post(url, {
-            'refresh_token': 'invalid_token'
-        })
+        response = self.client.post(url, {'refresh_token': 'invalid_token'})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
