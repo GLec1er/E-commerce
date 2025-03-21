@@ -54,6 +54,7 @@ class Discount(models.Model):
     product = models.ForeignKey('Product', null=True, blank=True, on_delete=models.SET_NULL, related_name="discounts")
 
     def apply_discount(self, price):
+        """Применяет скидку к цене."""
         if self.discount_type == 'percentage':
             return price - (price * self.value / 100)
         elif self.discount_type == 'fixed':
@@ -61,6 +62,7 @@ class Discount(models.Model):
         return price
 
     def is_active(self):
+        """Проверяет, активна ли скидка."""
         today = timezone.now().date()
         return self.start_date <= today <= self.end_date
 
@@ -70,6 +72,7 @@ class Discount(models.Model):
 
 # Товар
 class Product(models.Model):
+    """Модель товара в магазине с основными характеристиками и ценообразованием."""
     name = models.CharField(max_length=255)
     description = models.TextField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
@@ -93,6 +96,7 @@ class Product(models.Model):
         return self.name
 
     def get_discounted_price(self):
+        """Возвращает цену с учетом скидки."""
         if self.discount:
             return self.discount.apply_discount(self.price)
         return self.price

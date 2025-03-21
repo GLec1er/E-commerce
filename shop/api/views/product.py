@@ -7,7 +7,7 @@ from rest_framework.decorators import action
 from shop.api.permissions.base import PermissionsByActionMixin
 from shop.api.permissions.user import IsAdminOrOwner
 from shop.api.serializers.product import ProductSerializer
-from shop.models import Product
+from shop.models import Product, SellerProfile
 
 
 class ProductAPIView(
@@ -25,10 +25,14 @@ class ProductAPIView(
 
     permissions_by_action = {
         'create': IsAuthenticated,
-        'retrieve': IsAdminOrOwner,
+        'retrieve': IsAuthenticated,
         'update': IsAuthenticated,
         'destroy': IsAdminOrOwner,
     }
+
+    def perform_create(self, serializer):
+        """Метод создания продукта."""
+        serializer.save()
 
     def perform_update(self, serializer):
         """Метод обновления продукта."""

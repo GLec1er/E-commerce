@@ -1,3 +1,42 @@
 venv
 .idea
 .env
+*cpython-312.pyc*
+.DS_store
+**/*cpython-312.pyc*
+**/cpython-312.pyc*/
+shop.log
+
+# Файлы кеша и временные файлы
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.log
+*.tmp
+*.swp
+*.swo
+.DS_Store
+
+# Файлы IDE/редакторов
+.vscode/
+.idea/
+*.iml
+
+# Файлы окружения Python
+.venv/
+venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Файлы сборки и артефакты
+dist/
+build/
+*.egg-info/
+*.spec
+
+# Docker, CI/CD, Node.js (если используется)
+docker-compose.override.yml
+node_modules/
+
+cpython-312.pyc

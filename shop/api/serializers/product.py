@@ -40,8 +40,9 @@ class ProductSerializer(serializers.ModelSerializer):
     category = CategorySerializer(read_only=True)
     brand = BrandSerializer(read_only=True)
     discount = DiscountSerializer(read_only=True)
-    owner = OwnerSerializer(read_only=True)
+    owner = serializers.PrimaryKeyRelatedField(queryset=SellerProfile.objects.all())
 
     class Meta:
         model = Product
         fields = '__all__'
+        extra_kwargs = {'owner': {'required': True}}

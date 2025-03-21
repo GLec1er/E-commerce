@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ObjectDoesNotExist
@@ -14,6 +16,9 @@ from shop.models import SellerProfile, Basket, BasketItem, Order, OrderItem
 from shop.models.product import Product
 
 
+logger = logging.getLogger('shop')
+
+
 class DashboardView(ListView):
     model = Product
     template_name = 'shop/dashboard.html'
@@ -22,6 +27,7 @@ class DashboardView(ListView):
 
     def get_queryset(self):
         store = SellerProfile.objects.filter(user_id=self.request.user.id).first()
+        logger.debug(f"Fetching products for store: {store.id if store else 'None'}")
         return Product.objects.filter(is_active=True).exclude(owner=store)
 
 
@@ -83,6 +89,7 @@ class ProductCreateView(CreateView):
 
     def form_valid(self, form):
         form.instance.owner = self.request.user.seller_profile
+        logger.info(f"Product created: {form.instance.name}")
         return super().form_valid(form)
 
 
@@ -133,9 +140,11 @@ class BasketView(LoginRequiredMixin, View):
         basket = Basket.objects.filter(user=request.user).first()
 
         if not basket:
+            logger.warning(f"Basket not found for user: {request.user.id}")
             return JsonResponse({"quantity": 0})
 
         item = BasketItem.objects.filter(basket=basket, product=product).first()
+        logger.debug(f"Fetching quantity for product {product.id}: {item.quantity if item else 0}")
         return JsonResponse({"quantity": item.quantity if item else 0})
 
     def post(self, request, product_id):
@@ -147,6 +156,9 @@ class BasketView(LoginRequiredMixin, View):
         if not item_created:
             item.quantity += 1
             item.save()
+            logger.info(f"Product {product.id} quantity updated in basket for user {request.user.id}")
+        else:
+            logger.info(f"Product {product.id} added to basket for user {request.user.id}")
 
         return JsonResponse({"quantity": item.quantity})
 
@@ -156,18 +168,22 @@ class BasketView(LoginRequiredMixin, View):
         basket = Basket.objects.filter(user=request.user).first()
 
         if not basket:
+            logger.warning(f"Basket not found for user: {request.user.id}")
             return JsonResponse({"quantity": 0})
 
         item = BasketItem.objects.filter(basket=basket, product=product).first()
 
         if not item:
+            logger.warning(f"Product {product.id} not found in basket for user {request.user.id}")
             return JsonResponse({"quantity": 0})
 
         if item.quantity > 1:
             item.quantity -= 1
             item.save()
+            logger.info(f"Product {product.id} quantity decreased in basket for user {request.user.id}")
         else:
             item.delete()
+            logger.info(f"Product {product.id} removed from basket for user {request.user.id}")
 
         return JsonResponse({"quantity": item.quantity if item.quantity > 0 else 0})
 
@@ -179,18 +195,22 @@ def create_order(request):
     basket_items = basket.basketitem_set.all()
 
     if not basket_items:
+        logger.info(f"User {request.user.id} tried to create order with empty basket.")
         return redirect('shop:basket')  # Если корзина пустая, возвращаем пользователя обратно
 
     # Создаём заказ
     order = Order.objects.create(user=request.user)
+    logger.info(f"Order created for user {request.user.id}, order id: {order.id}")
 
     # Переносим товары из корзины в заказ
     for item in basket_items:
         OrderItem.objects.create(order=order, product=item.product, quantity=item.quantity)
+        logger.debug(f"Added product {item.product.id} to order {order.id}")
 
     # Очищаем корзину
     basket_items.delete()
 
+    logger.info(f"Basket cleared for user {request.user.id} after order creation.")
     return redirect('shop:orders')  # После оформления заказа переходим на страницу заказов
 
 

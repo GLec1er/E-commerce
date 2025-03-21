@@ -17,5 +17,7 @@ class BasketItem(models.Model):
 
     def get_total_price(self):
         """Возвращает цену товара с учетом скидки и количества."""
-        product_price = self.product.get_discounted_price() if self.product.discount else self.product.price
+        if self.product.discount:
+            product_price = self.product.get_discounted_price()
+        product_price = self.product.price
         return product_price * self.quantity

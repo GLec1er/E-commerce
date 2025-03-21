@@ -33,4 +33,4 @@ class SellerProfile(models.Model):
         ordering = ["-created_at"]
 
     def __str__(self):
-        return self.store_name.name if self.store_name else str(self.user)
+        return f'{self.user} - {self.store_name.name}'

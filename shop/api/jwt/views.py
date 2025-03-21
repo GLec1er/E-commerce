@@ -4,7 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status, permissions
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.http import http_date
-import datetime
+from datetime import datetime, timedelta
 
 
 class LoginView(APIView):
@@ -29,8 +29,8 @@ class LoginView(APIView):
             value=access_token,
             httponly=True,
             samesite="Lax",
-            secure=True,  # Только для HTTPS
-            expires=http_date(datetime.datetime.utcnow() + datetime.timedelta(minutes=15)),
+            secure=True,
+            max_age=15 * 60,
         )
         response.set_cookie(
             key="refresh_token",
@@ -38,7 +38,7 @@ class LoginView(APIView):
             httponly=True,
             samesite="Lax",
             secure=True,
-            expires=http_date(datetime.datetime.utcnow() + datetime.timedelta(days=7)),
+            max_age=15 * 60,
         )
 
         return response
@@ -76,7 +76,7 @@ class RefreshTokenView(APIView):
             httponly=True,
             samesite="Lax",
             secure=True,
-            expires=http_date(datetime.datetime.now() + datetime.timedelta(minutes=15)),
+            max_age=15 * 60,
         )
 
         return response

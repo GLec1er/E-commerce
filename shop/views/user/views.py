@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -10,12 +12,17 @@ from shop.forms import CustomUserCreationForm, LoginForm, ShopForm, DiscountForm
 from shop.models import Product, StoreName, SellerProfile
 from shop.models.product import Discount
 
+logger = logging.getLogger('shop')
 
 # Регистрация
 class RegisterView(CreateView):
     form_class = CustomUserCreationForm
     template_name = 'user/register.html'
     success_url = reverse_lazy('login')
+
+    def form_valid(self, form):
+        logger.info(f"New user registration: {form.cleaned_data['username']}")
+        return super().form_valid(form)
 
 
 # Вход
@@ -29,12 +36,12 @@ def login_view(request):
 
             if user is not None:
                 login(request, user)
+                logger.info(f"User {username} logged in successfully.")
 
                 refresh = RefreshToken.for_user(user)
                 access_token = str(refresh.access_token)
 
                 response = redirect('shop:dashboard')
-
                 response.set_cookie(
                     key="access_token",
                     value=access_token,
@@ -52,8 +59,10 @@ def login_view(request):
 
                 return response
             else:
+                logger.warning(f"Failed login attempt for username: {username}")
                 messages.error(request, 'Неверное имя пользователя или пароль.')
         else:
+            logger.error("Login form contains errors.")
             messages.error(request, 'Пожалуйста, исправьте ошибки в форме.')
     else:
         form = LoginForm()
@@ -62,6 +71,7 @@ def login_view(request):
 
 
 def logout_view(request):
+    logger.info(f"User {request.user.username} logged out.")
     response = redirect('user:login')
 
     response.delete_cookie("access_token")
@@ -107,17 +117,20 @@ class ShopCreateView(CreateView):
         seller_profile = getattr(request.user, 'seller_profile', None)
 
         if seller_profile and StoreName.objects.filter(owner=seller_profile).exists():
+            logger.warning(f"User {request.user.username} attempted to create a shop, but already has one.")
             messages.warning(request, "У вас уже есть магазин.")
             return redirect('user:profile')
 
         return super().dispatch(request, *args, **kwargs)
 
     def form_valid(self, form):
+        logger.info(f"Shop created successfully for user {self.request.user.username}.")
         form.save(user=self.request.user)
         messages.success(self.request, "Магазин успешно создан!")
         return redirect(self.success_url)
 
     def form_invalid(self, form):
+        logger.error(f"Error creating shop for user {self.request.user.username}. Invalid form data.")
         messages.error(self.request, "Ошибка при создании магазина. Проверьте введённые данные.")
         return super().form_invalid(form)
 
@@ -155,6 +168,7 @@ class DiscountCreateView(CreateView):
 @login_required
 def delete_shop(request):
     if not request.user.is_sealer:
+        logger.warning(f"User {request.user.username} attempted to delete a shop they don't own.")
         messages.error(request, "You don't have a shop to delete.")
         return redirect('user:profile')
 
@@ -166,5 +180,6 @@ def delete_shop(request):
     request.user.is_sealer = False
     request.user.save()
 
+    logger.info(f"Shop for user {request.user.username} deleted successfully.")
     messages.success(request, "Your shop has been deleted successfully.")
     return redirect('user:profile')

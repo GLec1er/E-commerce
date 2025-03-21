@@ -35,7 +35,7 @@ BASKET_URL_PATTERNS = [
 
 ORDER_URL_PATTERNS = [
     path('list/', OrderAPIView.as_view(), name='list'),
-    path('<int:order_id>/', OrderProductAPIView.as_view(), name='order'),
+    path('<int:order_id>/', OrderProductAPIView.as_view(), name='get'),
 ]
 
 API_URL_PATTERNS = [
